@@ -2,747 +2,2292 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-<title>Indian Kartik Carrom</title>
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
+<title>Indian Kartik Ludo</title>
 
 <style>
 *{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
 }
+
 html,body{
-  margin:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  background:#111;
-  font-family:Arial,sans-serif;
-  color:white;
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:Arial,Helvetica,sans-serif;
+    background:
+        radial-gradient(circle at 50% 15%,#364152 0%,#151a23 48%,#080b10 100%);
+    color:white;
 }
+
 body{
-  display:flex;
-  justify-content:center;
-  align-items:center;
+    display:flex;
+    justify-content:center;
 }
 
-#game{
-  width:100%;
-  max-width:760px;
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  background:
-    radial-gradient(circle at 50% 15%,#333,#111 70%);
+.app{
+    width:100%;
+    max-width:760px;
+    height:100%;
+    display:flex;
+    flex-direction:column;
 }
 
-#topbar{
-  width:100%;
-  max-width:700px;
-  padding:10px 14px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+/* ================= TOP ================= */
+
+.topbar{
+    height:72px;
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:9px 14px;
+}
+
+.logoArea{
+    display:flex;
+    align-items:center;
+    gap:10px;
 }
 
 .logo{
-  font-size:20px;
-  font-weight:900;
-  letter-spacing:1px;
+    width:45px;
+    height:45px;
+    border-radius:14px;
+    display:grid;
+    place-items:center;
+    font-size:25px;
+    background:
+        linear-gradient(145deg,#ffffff,#c4cbd5);
+    color:#151a22;
+    box-shadow:
+        0 7px 18px #0009,
+        inset 0 2px 3px #fff;
 }
 
-.stats{
-  display:flex;
-  gap:10px;
+.title{
+    font-size:16px;
+    font-weight:900;
+    letter-spacing:.7px;
 }
 
-.stat{
-  background:#242424;
-  border:1px solid #444;
-  border-radius:10px;
-  padding:7px 11px;
-  font-size:13px;
+.subtitle{
+    margin-top:3px;
+    color:#9ba5b4;
+    font-size:10px;
 }
 
-#boardWrap{
-  position:relative;
-  width:min(94vw,700px);
-  aspect-ratio:1;
-  margin:auto 0;
-  padding:12px;
-  border-radius:24px;
-  background:
-    linear-gradient(135deg,#321607,#9a5721 25%,#4d210c 55%,#b66b2b 80%,#351609);
-  box-shadow:
-    0 20px 45px rgba(0,0,0,.65),
-    inset 0 0 0 4px #251005,
-    inset 0 0 0 8px #c17a3a;
+.playerIndicator{
+    min-width:112px;
+    padding:8px 12px;
+    border-radius:14px;
+    background:#ffffff0d;
+    border:1px solid #ffffff16;
+    text-align:center;
+    box-shadow:0 7px 20px #0006;
+}
+
+.playerIndicator span{
+    display:block;
+    color:#8f99a8;
+    font-size:9px;
+    letter-spacing:1px;
+}
+
+.playerIndicator b{
+    display:block;
+    margin-top:3px;
+    font-size:13px;
+}
+
+/* ================= BOARD ================= */
+
+.boardArea{
+    flex:1;
+    min-height:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:5px 9px;
+}
+
+.boardFrame{
+    width:min(95vw,700px);
+    aspect-ratio:1;
+    padding:10px;
+    border-radius:28px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #f7f8fa 0%,
+            #aeb7c2 18%,
+            #343b46 52%,
+            #aeb7c2 80%,
+            #f7f8fa 100%
+        );
+
+    box-shadow:
+        0 28px 55px #000c,
+        inset 0 2px 3px #fff,
+        inset 0 -5px 10px #0009;
 }
 
 canvas{
-  width:100%;
-  height:100%;
-  display:block;
-  border-radius:14px;
-  touch-action:none;
-  background:#e4b66e;
+    width:100%;
+    height:100%;
+    display:block;
+    border-radius:19px;
+    background:#eee;
+    touch-action:none;
 }
 
-#controls{
-  width:min(94vw,700px);
-  padding:8px 0 12px;
-  display:flex;
-  gap:8px;
-  align-items:center;
+/* ================= CONTROLS ================= */
+
+.bottom{
+    flex-shrink:0;
+    padding:7px 14px 14px;
 }
 
-button{
-  border:0;
-  color:white;
-  font-weight:bold;
-  border-radius:12px;
-  padding:12px 14px;
-  background:#292929;
-  box-shadow:0 4px 10px rgba(0,0,0,.35);
+.controlRow{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:12px;
 }
 
-button:active{
-  transform:scale(.96);
+.diceButton{
+    width:64px;
+    height:58px;
+    border:0;
+    border-radius:17px;
+
+    background:
+        linear-gradient(145deg,#ffffff,#cbd1d9);
+
+    color:#111827;
+    font-size:31px;
+    font-weight:900;
+
+    box-shadow:
+        0 8px 18px #0009,
+        inset 0 2px 3px #fff;
+
+    cursor:pointer;
 }
 
-#power{
-  flex:1;
-  height:16px;
-  accent-color:#e8a43b;
+.diceButton:active{
+    transform:scale(.94);
 }
 
-#powerText{
-  width:45px;
-  text-align:center;
-  font-size:12px;
+.diceButton.disabled{
+    opacity:.45;
+    pointer-events:none;
 }
 
-#message{
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  background:rgba(0,0,0,.78);
-  border:1px solid #777;
-  padding:14px 20px;
-  border-radius:14px;
-  font-weight:bold;
-  pointer-events:none;
-  opacity:0;
-  transition:.2s;
+.newButton{
+    height:48px;
+    padding:0 18px;
+    border:1px solid #ffffff18;
+    border-radius:15px;
+
+    background:
+        linear-gradient(145deg,#394352,#171c24);
+
+    color:white;
+    font-weight:900;
+
+    box-shadow:0 7px 18px #0008;
+}
+
+.status{
+    height:22px;
+    text-align:center;
+    color:#aeb6c2;
+    font-size:12px;
+    padding-top:6px;
+}
+
+/* ================= WIN POPUP ================= */
+
+.popup{
+    position:fixed;
+    inset:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    background:#000b;
+    backdrop-filter:blur(8px);
+    z-index:50;
+}
+
+.popup.show{
+    display:flex;
+}
+
+.popupBox{
+    width:min(88vw,360px);
+    padding:30px;
+    border-radius:26px;
+    text-align:center;
+
+    background:
+        linear-gradient(145deg,#29313e,#10141b);
+
+    border:1px solid #ffffff20;
+    box-shadow:0 30px 90px #000;
+}
+
+.popupBox h1{
+    margin:0 0 8px;
+}
+
+.popupBox p{
+    color:#aeb7c4;
+    font-size:13px;
+}
+
+.popupBox button{
+    margin-top:10px;
+    padding:13px 25px;
+    border:0;
+    border-radius:13px;
+    font-weight:900;
+}
+
+/* ================= SMALL PHONES ================= */
+
+@media(max-height:650px){
+
+    .topbar{
+        height:58px;
+    }
+
+    .logo{
+        width:38px;
+        height:38px;
+        font-size:21px;
+    }
+
+    .title{
+        font-size:13px;
+    }
+
+    .boardArea{
+        padding:2px 8px;
+    }
+
+    .bottom{
+        padding-bottom:7px;
+    }
+
+    .diceButton{
+        height:50px;
+        width:58px;
+    }
+
+    .status{
+        display:none;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<div id="game">
+<div class="app">
 
-  <div id="topbar">
-    <div class="logo">INDIAN KARTIK CARROM</div>
+    <!-- ================= HEADER ================= -->
 
-    <div class="stats">
-      <div class="stat">Score: <span id="score">0</span></div>
-      <div class="stat">Turn: <span id="turn">1</span></div>
+    <div class="topbar">
+
+        <div class="logoArea">
+
+            <div class="logo">🎲</div>
+
+            <div>
+                <div class="title">
+                    INDIAN KARTIK LUDO
+                </div>
+
+                <div class="subtitle">
+                    PREMIUM LUDO ARENA
+                </div>
+            </div>
+
+        </div>
+
+        <div class="playerIndicator">
+
+            <span>CURRENT PLAYER</span>
+
+            <b id="playerName">
+                RED PLAYER
+            </b>
+
+        </div>
+
     </div>
-  </div>
 
-  <div id="boardWrap">
-    <canvas id="canvas"></canvas>
-    <div id="message"></div>
-  </div>
 
-  <div id="controls">
-    <button id="left">◀</button>
-    <input id="power" type="range" min="10" max="100" value="55">
-    <div id="powerText">55%</div>
-    <button id="right">▶</button>
-    <button id="reset">↻</button>
-  </div>
+    <!-- ================= BOARD ================= -->
+
+    <div class="boardArea">
+
+        <div class="boardFrame">
+
+            <canvas id="ludoCanvas"></canvas>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= CONTROLS ================= -->
+
+    <div class="bottom">
+
+        <div class="controlRow">
+
+            <button
+                id="diceButton"
+                class="diceButton">
+                ⚄
+            </button>
+
+            <button
+                id="newButton"
+                class="newButton">
+                NEW GAME
+            </button>
+
+        </div>
+
+        <div
+            id="status"
+            class="status">
+            RED PLAYER — Roll the dice
+        </div>
+
+    </div>
 
 </div>
 
+
+<!-- ================= WIN POPUP ================= -->
+
+<div id="popup" class="popup">
+
+    <div class="popupBox">
+
+        <h1 id="winnerTitle">
+            🏆 WINNER
+        </h1>
+
+        <p id="winnerMessage">
+            Congratulations!
+        </p>
+
+        <button id="playAgain">
+            PLAY AGAIN
+        </button>
+
+    </div>
+
+</div>
+
+
 <script>
-const canvas=document.getElementById("canvas");
-const ctx=canvas.getContext("2d");
 
-let W=700,H=700;
-let scale=1;
+/* ============================================================
+   INDIAN KARTIK LUDO
+   Realistic single-file HTML prototype
+============================================================ */
 
-function resize(){
-  const r=canvas.getBoundingClientRect();
-  scale=devicePixelRatio||1;
-  canvas.width=W*scale;
-  canvas.height=H*scale;
-  ctx.setTransform(scale,0,0,scale,0,0);
+const canvas =
+    document.getElementById("ludoCanvas");
+
+const ctx =
+    canvas.getContext("2d");
+
+const diceButton =
+    document.getElementById("diceButton");
+
+const newButton =
+    document.getElementById("newButton");
+
+const playAgain =
+    document.getElementById("playAgain");
+
+const statusText =
+    document.getElementById("status");
+
+const playerName =
+    document.getElementById("playerName");
+
+const popup =
+    document.getElementById("popup");
+
+const winnerTitle =
+    document.getElementById("winnerTitle");
+
+const winnerMessage =
+    document.getElementById("winnerMessage");
+
+
+/* ============================================================
+   CANVAS
+============================================================ */
+
+const BOARD = 750;
+
+let DPR =
+    window.devicePixelRatio || 1;
+
+function resizeCanvas(){
+
+    const rect =
+        canvas.getBoundingClientRect();
+
+    DPR =
+        window.devicePixelRatio || 1;
+
+    canvas.width =
+        rect.width * DPR;
+
+    canvas.height =
+        rect.height * DPR;
+
+    ctx.setTransform(
+        canvas.width / BOARD,
+        0,
+        0,
+        canvas.height / BOARD,
+        0,
+        0
+    );
 }
-resize();
-window.addEventListener("resize",resize);
 
-const pockets=[
-  {x:42,y:42},
-  {x:658,y:42},
-  {x:42,y:658},
-  {x:658,y:658}
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
+
+resizeCanvas();
+
+
+/* ============================================================
+   COLORS
+============================================================ */
+
+const PLAYER_COLORS = {
+
+    red:{
+        name:"RED PLAYER",
+        main:"#e53935",
+        dark:"#8f1111",
+        light:"#ff918d",
+        glow:"#ff453d"
+    },
+
+    green:{
+        name:"GREEN PLAYER",
+        main:"#18b957",
+        dark:"#08702f",
+        light:"#83edaa",
+        glow:"#21dc70"
+    },
+
+    yellow:{
+        name:"YELLOW PLAYER",
+        main:"#f4c518",
+        dark:"#9c7300",
+        light:"#fff39b",
+        glow:"#ffe43b"
+    },
+
+    blue:{
+        name:"BLUE PLAYER",
+        main:"#2678e8",
+        dark:"#0c3f91",
+        light:"#86baff",
+        glow:"#438fff"
+    }
+
+};
+
+
+/* ============================================================
+   PLAYER ORDER
+============================================================ */
+
+const players = [
+    "red",
+    "green",
+    "yellow",
+    "blue"
 ];
 
-const center={x:350,y:350};
 
-let striker;
-let coins=[];
-let score=0;
-let turn=1;
-let moving=false;
-let aiming=false;
-let aimX=350;
-let aimY=150;
+/* ============================================================
+   15 x 15 STANDARD LUDO BOARD
+============================================================ */
 
-function makeCoin(x,y,color){
-  return {
-    x,y,
-    vx:0,
-    vy:0,
-    r:15,
-    color,
-    alive:true
-  };
+const GRID = 15;
+
+const CELL = BOARD / GRID;
+
+
+/*
+   Standard 15 x 15 Ludo layout.
+
+   Red    = top-left
+   Green  = top-right
+   Yellow = bottom-right
+   Blue   = bottom-left
+*/
+
+
+/* ============================================================
+   PATH
+============================================================ */
+
+const PATH = [
+
+    [6,0],[6,1],[6,2],[6,3],[6,4],
+    [5,4],[4,4],[3,4],[2,4],[1,4],
+    [0,4],[0,5],[0,6],
+
+    [1,6],[2,6],[3,6],[4,6],[5,6],
+
+    [6,5],[6,6],[6,7],[6,8],[6,9],
+
+    [6,10],[5,10],[4,10],[3,10],[2,10],
+    [1,10],[0,10],[0,9],[0,8],[0,7],
+
+    [1,7],[2,7],[3,7],[4,7],[5,7],
+
+    [7,8],[8,8],[9,8],[10,8],
+    [11,8],[12,8],[13,8],[14,8],
+
+    [14,7],[14,6],[13,6],[12,6],[11,6],
+    [10,6],[9,6],[8,6],[7,6],
+
+    [8,5],[8,4],[8,3],[8,2],[8,1],
+    [8,0],[7,0]
+];
+
+
+/*
+   The visual board has a continuous route.
+   Token movement uses a normalized route.
+*/
+
+
+/* ============================================================
+   PLAYER START INDEX
+============================================================ */
+
+const START = {
+    red:0,
+    green:14,
+    yellow:28,
+    blue:42
+};
+
+
+/* ============================================================
+   HOME LANES
+============================================================ */
+
+const HOME_LANES = {
+
+    red:[
+        [7,1],
+        [7,2],
+        [7,3],
+        [7,4],
+        [7,5],
+        [7,6]
+    ],
+
+    green:[
+        [13,7],
+        [12,7],
+        [11,7],
+        [10,7],
+        [9,7],
+        [8,7]
+    ],
+
+    yellow:[
+        [7,13],
+        [7,12],
+        [7,11],
+        [7,10],
+        [7,9],
+        [7,8]
+    ],
+
+    blue:[
+        [1,7],
+        [2,7],
+        [3,7],
+        [4,7],
+        [5,7],
+        [6,7]
+    ]
+
+};
+
+
+/* ============================================================
+   TOKEN HOME POSITIONS
+============================================================ */
+
+const BASES = {
+
+    red:[
+        [1.7,1.7],
+        [3.3,1.7],
+        [1.7,3.3],
+        [3.3,3.3]
+    ],
+
+    green:[
+        [11.7,1.7],
+        [13.3,1.7],
+        [11.7,3.3],
+        [13.3,3.3]
+    ],
+
+    yellow:[
+        [11.7,11.7],
+        [13.3,11.7],
+        [11.7,13.3],
+        [13.3,13.3]
+    ],
+
+    blue:[
+        [1.7,11.7],
+        [3.3,11.7],
+        [1.7,13.3],
+        [3.3,13.3]
+    ]
+
+};
+
+
+/* ============================================================
+   TOKENS
+============================================================ */
+
+let tokens = [];
+
+function createTokens(){
+
+    tokens = [];
+
+    players.forEach(color=>{
+
+        for(let i=0;i<4;i++){
+
+            tokens.push({
+
+                color:color,
+
+                id:i,
+
+                /*
+                   -1 = home base
+                    0 = starting cell
+                   57 = finished
+                */
+
+                progress:-1,
+
+                moving:false,
+
+                selected:false
+
+            });
+
+        }
+
+    });
+
 }
 
-function resetGame(){
 
-  score=0;
-  turn=1;
-  moving=false;
-  aiming=false;
+/* ============================================================
+   GAME VARIABLES
+============================================================ */
 
-  document.getElementById("score").textContent=score;
-  document.getElementById("turn").textContent=turn;
+let currentPlayer = 0;
 
-  coins=[];
+let diceValue = 0;
 
-  coins.push(makeCoin(350,350,"queen"));
+let rolling = false;
 
-  const positions=[
-    [350,318],[378,334],[378,366],
-    [350,382],[322,366],[322,334],
-    [350,286],[378,302],[406,350],
-    [378,398],[350,414],[322,398],
-    [294,350],[322,302]
-  ];
+let gameOver = false;
 
-  positions.forEach((p,i)=>{
-    coins.push(
-      makeCoin(
-        p[0],
-        p[1],
-        i%2===0 ? "white":"black"
-      )
+
+/* ============================================================
+   UTILITY
+============================================================ */
+
+function centerOfGrid(x,y){
+
+    return {
+
+        x:(x+0.5)*CELL,
+
+        y:(y+0.5)*CELL
+
+    };
+
+}
+
+
+function roundedRect(
+    x,
+    y,
+    w,
+    h,
+    r
+){
+
+    ctx.beginPath();
+
+    ctx.moveTo(x+r,y);
+
+    ctx.arcTo(
+        x+w,y,
+        x+w,y+h,
+        r
     );
-  });
 
-  striker={
-    x:350,
-    y:605,
-    vx:0,
-    vy:0,
-    r:19,
-    color:"striker"
-  };
+    ctx.arcTo(
+        x+w,y+h,
+        x,y+h,
+        r
+    );
+
+    ctx.arcTo(
+        x,y+h,
+        x,y,
+        r
+    );
+
+    ctx.arcTo(
+        x,y,
+        x+w,y,
+        r
+    );
+
+    ctx.closePath();
+
 }
 
-resetGame();
+
+/* ============================================================
+   SHADOW
+============================================================ */
+
+function setShadow(
+    color="#0007",
+    blur=10,
+    y=4
+){
+
+    ctx.shadowColor=color;
+
+    ctx.shadowBlur=blur;
+
+    ctx.shadowOffsetX=0;
+
+    ctx.shadowOffsetY=y;
+
+}
+
+
+function clearShadow(){
+
+    ctx.shadowColor="transparent";
+
+    ctx.shadowBlur=0;
+
+    ctx.shadowOffsetX=0;
+
+    ctx.shadowOffsetY=0;
+
+}
+
+
+/* ============================================================
+   BACKGROUND
+============================================================ */
+
+function drawBackground(){
+
+    const g =
+        ctx.createLinearGradient(
+            0,0,
+            BOARD,BOARD
+        );
+
+    g.addColorStop(
+        0,
+        "#fffdf8"
+    );
+
+    g.addColorStop(
+        .45,
+        "#ece7dc"
+    );
+
+    g.addColorStop(
+        1,
+        "#d0c7b7"
+    );
+
+    ctx.fillStyle=g;
+
+    ctx.fillRect(
+        0,0,
+        BOARD,BOARD
+    );
+
+}
+
+
+/* ============================================================
+   PLAYER BASE
+============================================================ */
+
+function drawBase(
+    color,
+    gx,
+    gy
+){
+
+    const c =
+        PLAYER_COLORS[color];
+
+    const x =
+        gx*CELL;
+
+    const y =
+        gy*CELL;
+
+    const size =
+        CELL*6;
+
+    const gradient =
+        ctx.createLinearGradient(
+            x,y,
+            x+size,
+            y+size
+        );
+
+    gradient.addColorStop(
+        0,
+        c.light
+    );
+
+    gradient.addColorStop(
+        .45,
+        c.main
+    );
+
+    gradient.addColorStop(
+        1,
+        c.dark
+    );
+
+    setShadow(
+        "#0005",
+        12,
+        5
+    );
+
+    ctx.fillStyle =
+        gradient;
+
+    roundedRect(
+        x+5,
+        y+5,
+        size-10,
+        size-10,
+        22
+    );
+
+    ctx.fill();
+
+    clearShadow();
+
+
+    /*
+       Inner white playing area
+    */
+
+    ctx.fillStyle =
+        "#ffffffee";
+
+    roundedRect(
+        x+CELL*.9,
+        y+CELL*.9,
+        size-CELL*1.8,
+        size-CELL*1.8,
+        20
+    );
+
+    ctx.fill();
+
+
+    /*
+       Gloss border
+    */
+
+    ctx.strokeStyle =
+        "#ffffff99";
+
+    ctx.lineWidth=2;
+
+    roundedRect(
+        x+8,
+        y+8,
+        size-16,
+        size-16,
+        20
+    );
+
+    ctx.stroke();
+
+}
+
+
+/* ============================================================
+   DRAW ALL BASES
+============================================================ */
+
+function drawBases(){
+
+    drawBase("red",0,0);
+
+    drawBase("green",9,0);
+
+    drawBase("yellow",9,9);
+
+    drawBase("blue",0,9);
+
+}
+
+
+/* ============================================================
+   PATH CELLS
+============================================================ */
+
+function drawPath(){
+
+    for(let i=0;i<PATH.length;i++){
+
+        const p=PATH[i];
+
+        const center =
+            centerOfGrid(
+                p[0],
+                p[1]
+            );
+
+        let fill="#faf8f2";
+
+        /*
+           Starting cells
+        */
+
+        if(i===START.red)
+            fill=PLAYER_COLORS.red.light;
+
+        if(i===START.green)
+            fill=PLAYER_COLORS.green.light;
+
+        if(i===START.yellow)
+            fill=PLAYER_COLORS.yellow.light;
+
+        if(i===START.blue)
+            fill=PLAYER_COLORS.blue.light;
+
+
+        ctx.fillStyle=fill;
+
+        ctx.strokeStyle="#c7c0b4";
+
+        ctx.lineWidth=1;
+
+        setShadow(
+            "#0002",
+            3,
+            1
+        );
+
+        roundedRect(
+            center.x-CELL*.46,
+            center.y-CELL*.46,
+            CELL*.92,
+            CELL*.92,
+            5
+        );
+
+        ctx.fill();
+
+        clearShadow();
+
+        ctx.stroke();
+
+    }
+
+}
+
+
+/* ============================================================
+   HOME LANES
+============================================================ */
+
+function drawHomeLanes(){
+
+    Object.keys(HOME_LANES)
+    .forEach(color=>{
+
+        const c =
+            PLAYER_COLORS[color];
+
+        HOME_LANES[color]
+        .forEach(p=>{
+
+            const pos =
+                centerOfGrid(
+                    p[0],
+                    p[1]
+                );
+
+            ctx.fillStyle =
+                c.main;
+
+            ctx.globalAlpha=.85;
+
+            roundedRect(
+                pos.x-CELL*.46,
+                pos.y-CELL*.46,
+                CELL*.92,
+                CELL*.92,
+                5
+            );
+
+            ctx.fill();
+
+            ctx.globalAlpha=1;
+
+        });
+
+    });
+
+}
+
+
+/* ============================================================
+   CENTER HOME
+============================================================ */
+
+function drawCenter(){
+
+    const x=6*CELL;
+
+    const y=6*CELL;
+
+    const size=3*CELL;
+
+    /*
+       four colored triangles
+    */
+
+    const colors=[
+        PLAYER_COLORS.red.main,
+        PLAYER_COLORS.green.main,
+        PLAYER_COLORS.yellow.main,
+        PLAYER_COLORS.blue.main
+    ];
+
+
+    const points=[
+        [
+            [x,y],
+            [x+size,y],
+            [x+size/2,y+size/2]
+        ],
+
+        [
+            [x+size,y],
+            [x+size,y+size],
+            [x+size/2,y+size/2]
+        ],
+
+        [
+            [x+size,y+size],
+            [x,y+size],
+            [x+size/2,y+size/2]
+        ],
+
+        [
+            [x,y+size],
+            [x,y],
+            [x+size/2,y+size/2]
+        ]
+    ];
+
+
+    for(let i=0;i<4;i++){
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            points[i][0][0],
+            points[i][0][1]
+        );
+
+        ctx.lineTo(
+            points[i][1][0],
+            points[i][1][1]
+        );
+
+        ctx.lineTo(
+            points[i][2][0],
+            points[i][2][1]
+        );
+
+        ctx.closePath();
+
+        ctx.fillStyle=
+            colors[i];
+
+        ctx.fill();
+
+    }
+
+
+    /*
+       Center ring
+    */
+
+    const center =
+        centerOfGrid(7,7);
+
+    const gradient =
+        ctx.createRadialGradient(
+            center.x-9,
+            center.y-10,
+            2,
+            center.x,
+            center.y,
+            30
+        );
+
+    gradient.addColorStop(
+        0,
+        "#ffffff"
+    );
+
+    gradient.addColorStop(
+        .45,
+        "#e1e4e7"
+    );
+
+    gradient.addColorStop(
+        1,
+        "#777f89"
+    );
+
+    setShadow(
+        "#0007",
+        8,
+        3
+    );
+
+    ctx.fillStyle=gradient;
+
+    ctx.beginPath();
+
+    ctx.arc(
+        center.x,
+        center.y,
+        30,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    clearShadow();
+
+    ctx.strokeStyle="#4d5560";
+
+    ctx.lineWidth=3;
+
+    ctx.stroke();
+
+}
+
+
+/* ============================================================
+   SAFE CELLS
+============================================================ */
+
+function drawSafeCells(){
+
+    const safeIndexes=[
+        0,
+        8,
+        13,
+        21,
+        26,
+        34,
+        39,
+        47
+    ];
+
+    safeIndexes.forEach(index=>{
+
+        if(!PATH[index])return;
+
+        const p=PATH[index];
+
+        const pos=
+            centerOfGrid(
+                p[0],
+                p[1]
+            );
+
+        ctx.fillStyle=
+            "#ffffff";
+
+        ctx.font=
+            "bold 16px Arial";
+
+        ctx.textAlign="center";
+
+        ctx.textBaseline="middle";
+
+        ctx.fillText(
+            "★",
+            pos.x,
+            pos.y
+        );
+
+    });
+
+}
+
+
+/* ============================================================
+   TOKEN POSITION
+============================================================ */
+
+function getTokenPosition(token){
+
+    /*
+       Home base
+    */
+
+    if(token.progress<0){
+
+        const p=
+            BASES[token.color][token.id];
+
+        return {
+
+            x:p[0]*CELL,
+
+            y:p[1]*CELL
+
+        };
+
+    }
+
+
+    /*
+       Finished
+    */
+
+    if(token.progress>=57){
+
+        const lane=
+            HOME_LANES[token.color];
+
+        const p=
+            lane[lane.length-1];
+
+        return centerOfGrid(
+            p[0],
+            p[1]
+        );
+
+    }
+
+
+    /*
+       Normal route
+    */
+
+    const start=
+        START[token.color];
+
+    const routeIndex=
+        (start+token.progress)
+        %PATH.length;
+
+    const p=
+        PATH[routeIndex];
+
+    return centerOfGrid(
+        p[0],
+        p[1]
+    );
+
+}
+
+
+/* ============================================================
+   TOKEN DRAW
+============================================================ */
+
+function drawToken(token){
+
+    const pos=
+        getTokenPosition(token);
+
+    const color=
+        PLAYER_COLORS[token.color];
+
+    let radius=
+        CELL*.30;
+
+    /*
+       Finished tokens are slightly bigger
+    */
+
+    if(token.progress>=57)
+        radius=CELL*.34;
+
+
+    /*
+       outer glow
+    */
+
+    if(token.selected){
+
+        ctx.beginPath();
+
+        ctx.arc(
+            pos.x,
+            pos.y,
+            radius+9,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fillStyle=
+            color.glow+"66";
+
+        ctx.fill();
+
+    }
+
+
+    /*
+       shadow
+    */
+
+    setShadow(
+        "#000b",
+        10,
+        5
+    );
+
+
+    /*
+       metallic/3D body
+    */
+
+    const gradient=
+        ctx.createRadialGradient(
+            pos.x-radius*.4,
+            pos.y-radius*.55,
+            2,
+            pos.x,
+            pos.y,
+            radius*1.1
+        );
+
+    gradient.addColorStop(
+        0,
+        "#ffffff"
+    );
+
+    gradient.addColorStop(
+        .14,
+        color.light
+    );
+
+    gradient.addColorStop(
+        .45,
+        color.main
+    );
+
+    gradient.addColorStop(
+        .82,
+        color.dark
+    );
+
+    gradient.addColorStop(
+        1,
+        "#270000"
+    );
+
+
+    ctx.fillStyle=
+        gradient;
+
+    ctx.beginPath();
+
+    ctx.arc(
+        pos.x,
+        pos.y,
+        radius,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    clearShadow();
+
+
+    /*
+       outer rim
+    */
+
+    ctx.strokeStyle=
+        "#ffffffaa";
+
+    ctx.lineWidth=2;
+
+    ctx.stroke();
+
+
+    /*
+       top shine
+    */
+
+    const shine=
+        ctx.createRadialGradient(
+            pos.x-radius*.35,
+            pos.y-radius*.42,
+            1,
+            pos.x-radius*.35,
+            pos.y-radius*.42,
+            radius*.45
+        );
+
+    shine.addColorStop(
+        0,
+        "#ffffffdd"
+    );
+
+    shine.addColorStop(
+        1,
+        "#ffffff00"
+    );
+
+    ctx.fillStyle=shine;
+
+    ctx.beginPath();
+
+    ctx.arc(
+        pos.x-radius*.3,
+        pos.y-radius*.35,
+        radius*.42,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    /*
+       selected ring
+    */
+
+    if(token.selected){
+
+        ctx.strokeStyle=
+            "#ffffff";
+
+        ctx.lineWidth=4;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            pos.x,
+            pos.y,
+            radius+7,
+            0,
+            Math.PI*2
+        );
+
+        ctx.stroke();
+
+    }
+
+}
+
+
+/* ============================================================
+   TOKEN OVERLAP MANAGEMENT
+============================================================ */
+
+function drawTokens(){
+
+    tokens.forEach(token=>{
+
+        if(!token.moving){
+
+            drawToken(token);
+
+        }
+
+    });
+
+}
+
+
+/* ============================================================
+   BOARD
+============================================================ */
 
 function drawBoard(){
 
-  ctx.clearRect(0,0,W,H);
+    drawBackground();
 
-  const wood=ctx.createLinearGradient(0,0,W,H);
-  wood.addColorStop(0,"#f3ca82");
-  wood.addColorStop(.25,"#dba15b");
-  wood.addColorStop(.5,"#f0c77c");
-  wood.addColorStop(.75,"#cf9550");
-  wood.addColorStop(1,"#edbd70");
+    drawBases();
 
-  ctx.fillStyle=wood;
-  ctx.fillRect(0,0,W,H);
+    drawPath();
 
-  // wood grain
-  ctx.globalAlpha=.12;
-  ctx.strokeStyle="#5b2c0c";
-  ctx.lineWidth=2;
+    drawHomeLanes();
 
-  for(let i=0;i<70;i++){
-    const y=10+i*10;
-    ctx.beginPath();
-    ctx.moveTo(0,y);
-    ctx.bezierCurveTo(
-      180,y-8,
-      430,y+10,
-      700,y-4
-    );
-    ctx.stroke();
-  }
+    drawCenter();
 
-  ctx.globalAlpha=1;
+    drawSafeCells();
 
-  // inner frame
-  ctx.strokeStyle="#71390e";
-  ctx.lineWidth=7;
-  ctx.strokeRect(25,25,650,650);
+    drawTokens();
 
-  ctx.strokeStyle="#f5d38e";
-  ctx.lineWidth=2;
-  ctx.strokeRect(34,34,632,632);
+}
 
-  // baseline
-  ctx.strokeStyle="#8b3f14";
-  ctx.lineWidth=3;
 
-  ctx.beginPath();
-  ctx.moveTo(150,600);
-  ctx.lineTo(550,600);
-  ctx.stroke();
+/* ============================================================
+   DICE
+============================================================ */
 
-  ctx.beginPath();
-  ctx.moveTo(150,615);
-  ctx.lineTo(550,615);
-  ctx.stroke();
+const diceFaces=[
+    "⚀",
+    "⚁",
+    "⚂",
+    "⚃",
+    "⚄",
+    "⚅"
+];
 
-  // center circle
-  ctx.beginPath();
-  ctx.arc(350,350,52,0,Math.PI*2);
-  ctx.stroke();
 
-  ctx.beginPath();
-  ctx.arc(350,350,8,0,Math.PI*2);
-  ctx.fillStyle="#9b3b18";
-  ctx.fill();
+function randomDice(){
 
-  // diagonals
-  ctx.beginPath();
-  ctx.moveTo(90,90);
-  ctx.lineTo(610,610);
-  ctx.moveTo(610,90);
-  ctx.lineTo(90,610);
-  ctx.strokeStyle="rgba(120,50,10,.55)";
-  ctx.lineWidth=2;
-  ctx.stroke();
+    return 1+
+        Math.floor(
+            Math.random()*6
+        );
 
-  // pockets
-  pockets.forEach(p=>{
-    const g=ctx.createRadialGradient(
-      p.x-4,p.y-4,2,
-      p.x,p.y,25
+}
+
+
+function rollDice(){
+
+    if(
+        rolling ||
+        gameOver
+    ){
+        return;
+    }
+
+
+    rolling=true;
+
+    diceButton.classList.add(
+        "disabled"
     );
 
-    g.addColorStop(0,"#000");
-    g.addColorStop(.7,"#111");
-    g.addColorStop(1,"#4b250e");
 
-    ctx.fillStyle=g;
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,24,0,Math.PI*2);
-    ctx.fill();
-  });
+    let count=0;
+
+
+    const animation=
+        setInterval(()=>{
+
+            const n=
+                randomDice();
+
+            diceButton.textContent=
+                diceFaces[n-1];
+
+            count++;
+
+
+            if(count>=12){
+
+                clearInterval(
+                    animation
+                );
+
+                diceValue=
+                    randomDice();
+
+                diceButton.textContent=
+                    diceFaces[diceValue-1];
+
+                rolling=false;
+
+                processRoll();
+
+            }
+
+        },70);
+
 }
 
-function drawCoin(c){
 
-  if(!c.alive)return;
+/* ============================================================
+   MOVEMENT RULES
+============================================================ */
 
-  ctx.save();
+function currentColor(){
 
-  ctx.shadowColor="rgba(0,0,0,.55)";
-  ctx.shadowBlur=8;
-  ctx.shadowOffsetY=5;
+    return players[
+        currentPlayer
+    ];
 
-  const g=ctx.createRadialGradient(
-    c.x-c.r*.35,
-    c.y-c.r*.4,
-    2,
-    c.x,
-    c.y,
-    c.r
-  );
-
-  if(c.color==="white"){
-    g.addColorStop(0,"#fff");
-    g.addColorStop(.55,"#eee");
-    g.addColorStop(1,"#a8a8a8");
-  }
-  else if(c.color==="black"){
-    g.addColorStop(0,"#777");
-    g.addColorStop(.3,"#292929");
-    g.addColorStop(1,"#050505");
-  }
-  else{
-    g.addColorStop(0,"#ff8c72");
-    g.addColorStop(.4,"#d92917");
-    g.addColorStop(1,"#650b08");
-  }
-
-  ctx.fillStyle=g;
-  ctx.beginPath();
-  ctx.arc(c.x,c.y,c.r,0,Math.PI*2);
-  ctx.fill();
-
-  ctx.shadowColor="transparent";
-
-  ctx.strokeStyle=
-    c.color==="white" ? "#777" :
-    c.color==="black" ? "#aaa" : "#4b0000";
-
-  ctx.lineWidth=1.5;
-  ctx.stroke();
-
-  ctx.restore();
 }
 
-function drawStriker(){
 
-  const c=striker;
+function currentTokens(){
 
-  ctx.save();
+    const color=
+        currentColor();
 
-  ctx.shadowColor="rgba(0,0,0,.6)";
-  ctx.shadowBlur=10;
-  ctx.shadowOffsetY=6;
+    return tokens.filter(
+        t=>t.color===color
+    );
 
-  const g=ctx.createRadialGradient(
-    c.x-7,c.y-8,2,
-    c.x,c.y,c.r
-  );
-
-  g.addColorStop(0,"#fff");
-  g.addColorStop(.4,"#e9e9e9");
-  g.addColorStop(.8,"#bdbdbd");
-  g.addColorStop(1,"#777");
-
-  ctx.fillStyle=g;
-  ctx.beginPath();
-  ctx.arc(c.x,c.y,c.r,0,Math.PI*2);
-  ctx.fill();
-
-  ctx.shadowColor="transparent";
-
-  ctx.strokeStyle="#333";
-  ctx.lineWidth=3;
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.arc(c.x,c.y,8,0,Math.PI*2);
-  ctx.strokeStyle="#9c391b";
-  ctx.lineWidth=2;
-  ctx.stroke();
-
-  ctx.restore();
 }
 
-function drawAim(){
 
-  if(!aiming || moving)return;
+function canMove(token){
 
-  const dx=aimX-striker.x;
-  const dy=aimY-striker.y;
-  const len=Math.sqrt(dx*dx+dy*dy);
+    /*
+       Already finished
+    */
 
-  if(len<5)return;
+    if(token.progress>=57)
+        return false;
 
-  const nx=dx/len;
-  const ny=dy/len;
 
-  const length=160;
+    /*
+       Home requires six
+    */
 
-  ctx.save();
+    if(token.progress===-1){
 
-  ctx.strokeStyle="rgba(255,255,255,.85)";
-  ctx.lineWidth=2;
-  ctx.setLineDash([8,7]);
+        return diceValue===6;
 
-  ctx.beginPath();
-  ctx.moveTo(striker.x,striker.y);
-  ctx.lineTo(
-    striker.x+nx*length,
-    striker.y+ny*length
-  );
-  ctx.stroke();
-
-  ctx.setLineDash([]);
-
-  ctx.fillStyle="#fff";
-  ctx.beginPath();
-  ctx.arc(
-    striker.x+nx*length,
-    striker.y+ny*length,
-    4,
-    0,
-    Math.PI*2
-  );
-  ctx.fill();
-
-  ctx.restore();
-}
-
-function draw(){
-
-  drawBoard();
-
-  coins.forEach(drawCoin);
-
-  drawStriker();
-
-  drawAim();
-}
-
-function distance(a,b){
-  return Math.hypot(a.x-b.x,a.y-b.y);
-}
-
-function collide(a,b){
-
-  if(!a.alive || !b.alive)return;
-
-  const dx=b.x-a.x;
-  const dy=b.y-a.y;
-  const d=Math.hypot(dx,dy);
-
-  const min=a.r+b.r;
-
-  if(d===0 || d>min)return;
-
-  const nx=dx/d;
-  const ny=dy/d;
-
-  const rvx=b.vx-a.vx;
-  const rvy=b.vy-a.vy;
-
-  const vel=rvx*nx+rvy*ny;
-
-  if(vel>0)return;
-
-  const impulse=-vel*.9;
-
-  a.vx-=impulse*nx;
-  a.vy-=impulse*ny;
-
-  b.vx+=impulse*nx;
-  b.vy+=impulse*ny;
-
-  const overlap=min-d;
-
-  a.x-=nx*overlap/2;
-  a.y-=ny*overlap/2;
-
-  b.x+=nx*overlap/2;
-  b.y+=ny*overlap/2;
-}
-
-function pocketCheck(c){
-
-  if(!c.alive)return;
-
-  for(const p of pockets){
-
-    if(Math.hypot(c.x-p.x,c.y-p.y)<27){
-
-      c.alive=false;
-
-      if(c.color==="queen"){
-        score+=50;
-        showMessage("QUEEN! +50");
-      }
-      else{
-        score+=10;
-        showMessage("+10");
-      }
-
-      document.getElementById("score").textContent=score;
-
-      return;
-    }
-  }
-}
-
-function update(){
-
-  const all=[striker,...coins];
-
-  all.forEach(c=>{
-
-    if(!c.alive)return;
-
-    c.x+=c.vx;
-    c.y+=c.vy;
-
-    c.vx*=.985;
-    c.vy*=.985;
-
-    if(Math.abs(c.vx)<.025)c.vx=0;
-    if(Math.abs(c.vy)<.025)c.vy=0;
-
-    const min=48;
-    const max=652;
-
-    if(c.x-c.r<min){
-      c.x=min+c.r;
-      c.vx=Math.abs(c.vx)*.72;
     }
 
-    if(c.x+c.r>max){
-      c.x=max-c.r;
-      c.vx=-Math.abs(c.vx)*.72;
-    }
 
-    if(c.y-c.r<min){
-      c.y=min+c.r;
-      c.vy=Math.abs(c.vy)*.72;
-    }
+    /*
+       Cannot cross finish
+    */
 
-    if(c.y+c.r>max){
-      c.y=max-c.r;
-      c.vy=-Math.abs(c.vy)*.72;
-    }
+    return (
+        token.progress+diceValue
+        <=57
+    );
 
-    pocketCheck(c);
-  });
-
-  for(let i=0;i<all.length;i++){
-    for(let j=i+1;j<all.length;j++){
-      collide(all[i],all[j]);
-    }
-  }
-
-  const active=all.some(
-    c=>c.alive && (Math.abs(c.vx)+Math.abs(c.vy))>.03
-  );
-
-  if(moving && !active){
-
-    moving=false;
-    striker.vx=0;
-    striker.vy=0;
-
-    setTimeout(()=>{
-      turn++;
-      document.getElementById("turn").textContent=turn;
-
-      striker.x=350;
-      striker.y=605;
-
-      showMessage("YOUR TURN");
-    },300);
-  }
 }
+
+
+/* ============================================================
+   PROCESS DICE
+============================================================ */
+
+function processRoll(){
+
+    const movable=
+        currentTokens()
+        .filter(canMove);
+
+
+    if(movable.length===0){
+
+        statusText.textContent=
+            currentColor().toUpperCase()+
+            " PLAYER — No valid move";
+
+        setTimeout(
+            nextTurn,
+            850
+        );
+
+        return;
+
+    }
+
+
+    /*
+       Automatically select one
+       if only one can move
+    */
+
+    if(movable.length===1){
+
+        movable[0].selected=true;
+
+        drawBoard();
+
+        setTimeout(()=>{
+
+            moveToken(
+                movable[0]
+            );
+
+        },250);
+
+        return;
+
+    }
+
+
+    /*
+       Highlight all movable tokens
+    */
+
+    movable.forEach(
+        t=>t.selected=true
+    );
+
+
+    statusText.textContent=
+        "TAP A HIGHLIGHTED TOKEN";
+
+}
+
+
+/* ============================================================
+   MOVE TOKEN
+============================================================ */
+
+function moveToken(token){
+
+    if(!canMove(token))
+        return;
+
+
+    /*
+       remove selection
+    */
+
+    tokens.forEach(
+        t=>t.selected=false
+    );
+
+
+    token.moving=true;
+
+
+    const original=
+        token.progress;
+
+
+    let target;
+
+
+    if(original===-1){
+
+        target=0;
+
+    }else{
+
+        target=
+            original+diceValue;
+
+    }
+
+
+    let step=0;
+
+    const totalSteps=
+        target-original;
+
+
+    /*
+       Special case from home
+    */
+
+    let current=
+        original;
+
+
+    const timer=
+        setInterval(()=>{
+
+            if(current===-1){
+
+                current=0;
+
+            }else{
+
+                current++;
+
+            }
+
+
+            token.progress=current;
+
+            drawBoard();
+
+
+            step++;
+
+
+            if(
+                step>=totalSteps
+            ){
+
+                clearInterval(
+                    timer
+                );
+
+
+                token.progress=
+                    target;
+
+                token.moving=false;
+
+
+                /*
+                   Capture
+                */
+
+                captureTokens(
+                    token
+                );
+
+
+                /*
+                   Winner
+                */
+
+                if(
+                    checkWinner(
+                        token.color
+                    )
+                ){
+
+                    finishGame(
+                        token.color
+                    );
+
+                    return;
+
+                }
+
+
+                /*
+                   Six gives another turn
+                */
+
+                if(
+                    diceValue===6
+                ){
+
+                    diceButton.classList.remove(
+                        "disabled"
+                    );
+
+                    statusText.textContent=
+                        token.color.toUpperCase()+
+                        " PLAYER — SIX! ROLL AGAIN";
+
+                }else{
+
+                    setTimeout(
+                        nextTurn,
+                        500
+                    );
+
+                }
+
+            }
+
+        },130);
+
+}
+
+
+/* ============================================================
+   CAPTURE
+============================================================ */
+
+function captureTokens(
+    movingToken
+){
+
+    if(
+        movingToken.progress<0 ||
+        movingToken.progress>=57
+    ){
+        return;
+    }
+
+
+    const absolute=
+        (
+            START[movingToken.color]+
+            movingToken.progress
+        )
+        %
+        PATH.length;
+
+
+    /*
+       Safe cells cannot capture
+    */
+
+    const safe=[
+        0,
+        8,
+        13,
+        21,
+        26,
+        34,
+        39,
+        47
+    ];
+
+
+    if(
+        safe.includes(
+            absolute
+        )
+    ){
+        return;
+    }
+
+
+    tokens.forEach(other=>{
+
+        if(
+            other===movingToken ||
+            other.color===
+            movingToken.color ||
+            other.progress<0 ||
+            other.progress>=57
+        ){
+            return;
+        }
+
+
+        const otherAbsolute=
+            (
+                START[other.color]+
+                other.progress
+            )
+            %
+            PATH.length;
+
+
+        if(
+            otherAbsolute===
+            absolute
+        ){
+
+            other.progress=-1;
+
+            statusText.textContent=
+                movingToken.color.toUpperCase()+
+                " PLAYER — TOKEN CAPTURED!";
+
+        }
+
+    });
+
+}
+
+
+/* ============================================================
+   WINNER
+============================================================ */
+
+function checkWinner(color){
+
+    return tokens
+        .filter(
+            t=>t.color===color
+        )
+        .every(
+            t=>t.progress>=57
+        );
+
+}
+
+
+function finishGame(color){
+
+    gameOver=true;
+
+    winnerTitle.textContent=
+        "🏆 "+color.toUpperCase()+" WINS";
+
+    winnerMessage.textContent=
+        "Congratulations! All four tokens reached home.";
+
+    popup.classList.add(
+        "show"
+    );
+
+}
+
+
+/* ============================================================
+   NEXT TURN
+============================================================ */
+
+function nextTurn(){
+
+    tokens.forEach(
+        t=>t.selected=false
+    );
+
+
+    diceValue=0;
+
+
+    currentPlayer=
+        (
+            currentPlayer+1
+        )
+        %
+        players.length;
+
+
+    updatePlayer();
+
+
+    diceButton.classList.remove(
+        "disabled"
+    );
+
+
+    statusText.textContent=
+        currentColor().toUpperCase()+
+        " PLAYER — ROLL THE DICE";
+
+}
+
+
+/* ============================================================
+   PLAYER UI
+============================================================ */
+
+function updatePlayer(){
+
+    const color=
+        currentColor();
+
+    playerName.textContent=
+        PLAYER_COLORS[color].name;
+
+    playerName.style.color=
+        PLAYER_COLORS[color].main;
+
+}
+
+
+/* ============================================================
+   TOKEN TAP
+============================================================ */
+
+canvas.addEventListener(
+    "pointerdown",
+    function(event){
+
+        if(
+            gameOver ||
+            rolling ||
+            diceValue===0
+        ){
+            return;
+        }
+
+
+        const rect=
+            canvas.getBoundingClientRect();
+
+
+        const x=
+            (
+                event.clientX-
+                rect.left
+            )
+            *
+            BOARD/
+            rect.width;
+
+
+        const y=
+            (
+                event.clientY-
+                rect.top
+            )
+            *
+            BOARD/
+            rect.height;
+
+
+        const possible=
+            currentTokens()
+            .filter(canMove);
+
+
+        for(
+            const token of possible
+        ){
+
+            const pos=
+                getTokenPosition(
+                    token
+                );
+
+
+            const distance=
+                Math.hypot(
+                    x-pos.x,
+                    y-pos.y
+                );
+
+
+            if(
+                distance<
+                CELL*.48
+            ){
+
+                moveToken(
+                    token
+                );
+
+                return;
+
+            }
+
+        }
+
+    }
+);
+
+
+/* ============================================================
+   RESET
+============================================================ */
+
+function newGame(){
+
+    createTokens();
+
+    currentPlayer=0;
+
+    diceValue=0;
+
+    rolling=false;
+
+    gameOver=false;
+
+    popup.classList.remove(
+        "show"
+    );
+
+    diceButton.classList.remove(
+        "disabled"
+    );
+
+    diceButton.textContent="⚄";
+
+    updatePlayer();
+
+    statusText.textContent=
+        "RED PLAYER — ROLL THE DICE";
+
+}
+
+
+newButton.addEventListener(
+    "click",
+    newGame
+);
+
+
+playAgain.addEventListener(
+    "click",
+    newGame
+);
+
+
+diceButton.addEventListener(
+    "click",
+    rollDice
+);
+
+
+/* ============================================================
+   MAIN LOOP
+============================================================ */
 
 function loop(){
-  update();
-  draw();
-  requestAnimationFrame(loop);
+
+    drawBoard();
+
+    requestAnimationFrame(
+        loop
+    );
+
 }
+
+
+/* ============================================================
+   START
+============================================================ */
+
+newGame();
 
 loop();
 
-function pointerPosition(e){
-
-  const r=canvas.getBoundingClientRect();
-
-  return {
-    x:(e.clientX-r.left)*W/r.width,
-    y:(e.clientY-r.top)*H/r.height
-  };
-}
-
-canvas.addEventListener("pointerdown",e=>{
-
-  if(moving)return;
-
-  const p=pointerPosition(e);
-
-  if(Math.hypot(
-    p.x-striker.x,
-    p.y-striker.y
-  )<45){
-
-    aiming=true;
-    aimX=p.x;
-    aimY=p.y;
-
-    canvas.setPointerCapture(e.pointerId);
-  }
-});
-
-canvas.addEventListener("pointermove",e=>{
-
-  if(!aiming)return;
-
-  const p=pointerPosition(e);
-
-  aimX=p.x;
-  aimY=p.y;
-});
-
-canvas.addEventListener("pointerup",e=>{
-
-  if(!aiming)return;
-
-  aiming=false;
-
-  const dx=aimX-striker.x;
-  const dy=aimY-striker.y;
-
-  const len=Math.hypot(dx,dy);
-
-  if(len<20)return;
-
-  const power=
-    Number(document.getElementById("power").value)/100;
-
-  const maxSpeed=18;
-
-  striker.vx=(dx/len)*maxSpeed*power;
-  striker.vy=(dy/len)*maxSpeed*power;
-
-  moving=true;
-});
-
-document.getElementById("power").addEventListener("input",e=>{
-  document.getElementById("powerText").textContent=e.target.value+"%";
-});
-
-document.getElementById("left").addEventListener("click",()=>{
-  if(!moving){
-    striker.x-=18;
-    if(striker.x<150)striker.x=150;
-  }
-});
-
-document.getElementById("right").addEventListener("click",()=>{
-  if(!moving){
-    striker.x+=18;
-    if(striker.x>550)striker.x=550;
-  }
-});
-
-document.getElementById("reset").addEventListener("click",()=>{
-  resetGame();
-});
-
-function showMessage(text){
-
-  const m=document.getElementById("message");
-
-  m.textContent=text;
-  m.style.opacity=1;
-
-  setTimeout(()=>{
-    m.style.opacity=0;
-  },900);
-}
 </script>
 
 </body>
